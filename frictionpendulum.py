@@ -92,7 +92,7 @@ class FrictionPendulumEnv(gym.Env):
         "render_fps": 30,
     }
 
-    def __init__(self, render_mode: Optional[str] = None, g=10.0,L=1,m=1,dt=0.05,b=0.1,max_speed=50,max_torque=20):
+    def __init__(self, render_mode: Optional[str] = None, g=10.0,L=1,m=1,dt=0.05,b=0.1,max_speed=50,max_torque=20,initial_state=None):
         self.max_speed = max_speed
         self.max_torque = max_torque
         self.dt = m
@@ -100,6 +100,8 @@ class FrictionPendulumEnv(gym.Env):
         self.m = m
         self.l = L
         self.b = b
+        
+        self.initial_state=initial_state
 
         self.render_mode = render_mode
 
@@ -130,7 +132,7 @@ class FrictionPendulumEnv(gym.Env):
         self.last_u = u  # for rendering
         costs = angle_normalize(th) ** 2 + 0.1 * thdot**2 + 0.001 * (u**2)
 
-        newthdot = thdot + ((m*g*l*np.sin(th)-b*thdot+u)/((1/3)*m*np.power(l,2))) * dt
+        newthdot = thdot + ((m*g*l*np.sin(th)-b*thdot+u)/((1/3)*m*l**2)) * dt
         newthdot = np.clip(newthdot, -self.max_speed, self.max_speed)
         newth = th + newthdot * dt
 
@@ -153,7 +155,10 @@ class FrictionPendulumEnv(gym.Env):
             y = utils.verify_number_and_cast(y)
             high = np.array([x, y])
         low = -high  # We enforce symmetric limits.
-        self.state = self.np_random.uniform(low=low, high=high)
+        if self.initial_state is not None:
+            self.state = self.initial_state
+        else:
+            self.state = self.np_random.uniform(low=low, high=high)
         self.last_u = None
 
         if self.render_mode == "human":
