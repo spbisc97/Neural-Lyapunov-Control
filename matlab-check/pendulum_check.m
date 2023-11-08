@@ -18,7 +18,7 @@ A=A_parametric(g,m,b,L) ;
 
 B_parametric=@(g,m,b,L)...
     [0;...
-    1/m*L*L];
+    1/(m*L*L)];
 B=B_parametric(g,m,b,L);
 
 div()
