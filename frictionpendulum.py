@@ -132,7 +132,7 @@ class FrictionPendulumEnv(gym.Env):
         self.last_u = u  # for rendering
         costs = angle_normalize(th) ** 2 + 0.1 * thdot**2 + 0.001 * (u**2)
 
-        newthdot = thdot + ((m*g*l*np.sin(th)-b*thdot+u)/((1/3)*m*l**2)) * dt
+        newthdot = thdot + ((m*g*l*np.sin(th)-b*thdot+u)/(m*l**2)) * dt
         newthdot = np.clip(newthdot, -self.max_speed, self.max_speed)
         newth = th + newthdot * dt
 
