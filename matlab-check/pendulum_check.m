@@ -86,8 +86,6 @@ legend("theta","theta-dot")
 nexttile
 plot(t,k*y')
 legend("u[Nm]")
-title("NonLinearLQRControl")
-
 title("LinearLQRControl")
 
 
