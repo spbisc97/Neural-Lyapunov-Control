@@ -78,7 +78,7 @@ title("NonLinearLQRControl")
 
 
 figure(4)
-[t,y]=ode45(@(t, y) A*y+B*(0), tspan, [theta0, theta_dot0]);
+[t,y]=ode45(@(t, y) A*y+B*(-k*y), tspan, [theta0, theta_dot0]);
 tiledlayout(2,1)
 nexttile
 plot(t,y)
