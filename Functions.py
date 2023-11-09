@@ -23,6 +23,23 @@ def CheckLyapunov(x, f, V, ball_lb, ball_ub, config, epsilon):
                            logical_imply(ball_in_bound, lie_derivative_of_V <= epsilon))
     return CheckSatisfiability(logical_not(condition),config)
 
+def CheckdVdx(x, V, ball_ub, config, M):    
+    # Given a candidate Lyapunov function V, check the Lipschitz constant within a domain around the origin (sqrt(∑xᵢ²) ≤ ball_ub). 
+    # If it return unsat, then there is no state violating the conditions. 
+    
+    ball= Expression(0)
+    derivative_of_V = Expression(0)
+    
+    for i in range(len(x)):
+        ball += x[i]*x[i]
+        derivative_of_V += V.Differentiate(x[i])*V.Differentiate(x[i])
+    ball_in_bound = logical_and(ball <= ball_ub*ball_ub)
+    
+    # Constraint: x ∈ Ball → partial derivative of V <= M     
+    condition = logical_imply(ball_in_bound, derivative_of_V <= M)
+    return CheckSatisfiability(logical_not(condition),config)
+
+
 def AddCounterexamples(x,CE,N): 
     # Adding CE back to sample set
     c = []
